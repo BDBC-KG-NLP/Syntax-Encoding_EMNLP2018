@@ -1,3 +1,5 @@
+**/*.pyc
+**/*.zip
 **/.idea/
 **/__pycache__/
 /best/*
