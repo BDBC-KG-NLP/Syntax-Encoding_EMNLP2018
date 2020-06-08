@@ -13,11 +13,11 @@ from multiprocessing import Process, Queue
 import chardet
 import datetime
 
-os.environ['STANFORD_PARSER'] = '/home/LAB/huzy/stanford/stanford-parser.jar'
-os.environ['STANFORD_MODELS'] = '/home/LAB/huzy/stanford/stanford-parser-3.9.1-models.jar'
+os.environ['STANFORD_PARSER'] = '/home/huzy/stanford/stanford-parser.jar'
+os.environ['STANFORD_MODELS'] = '/home/huzy/stanford/stanford-parser-3.9.2-models.jar'
 
-parser = StanfordParser(model_path='/home/LAB/huzy/stanford/englishPCFG.ser.gz')
-token = StanfordTokenizer("/home/LAB/huzy/stanford/stanford-parser.jar")
+parser = StanfordParser()
+token = StanfordTokenizer("/home/huzy/stanford/stanford-parser.jar")
 
 
 # split sentences in document
@@ -56,8 +56,13 @@ def exception_print(i, num1, words):
     print("\n")
 
 
-def write_label_to_file(i, num1, ll):
-    with open("data/new/author" + str(i) + "/" + str(num1) + ".txt", "a+") as f1:
+def write_label_to_file(dataset, i, num1, ll, num_authors=None):
+    file = dataset
+    if num_authors is not None:
+        file += ('/' + str(num_authors))
+    if not os.path.exists(file + "/parse_data/author" + str(i)):
+        os.mkdir(file + "/parse_data/author" + str(i))
+    with open(file + "/parse_data/author" + str(i) + "/" + str(num1) + ".txt", "a+") as f1:
         for word_labels in ll:
             word_label = word_labels.split("@@")
             for label in word_label[:-1]:
@@ -71,22 +76,21 @@ path = []
 ll = []
 
 
-def parse1(author_label):
+def parse1(dataset, author_list, num_authors=None):
     global ll
     global path
-    num = []
-    paper_sentence_num = []
-    for i in range(author_label, author_label + 1):
-        # get the author's documents per author
-        with open("data/word_data/all/author" + str(i), "r") as f:
+
+    file = dataset
+    if num_authors is not None:
+        file += ('/'+str(num_authors))
+    # get the author's documents per author
+    for i in author_list:
+        with open(file+"/word_data/all/author" + str(i), "r") as f:
             documents = f.readlines()
             num1 = 0
-            # per paper
 
             for document in documents:
                 num1 += 1
-                sentences = []
-
                 try:  # can split or not,if the answer is yes,continue,if no,exception
                     sentences = split1(document)
                     for sentence in sentences:
@@ -100,7 +104,7 @@ def parse1(author_label):
                             ll = []
                             path = []
                             back_track(root)
-                            write_label_to_file(i, num1, ll)
+                            write_label_to_file(dataset, i, num1, ll, num_authors)
                         except:
                             print("-----------------------------------------")
                             exception_print(i, num1, words)
@@ -128,7 +132,7 @@ def parse1(author_label):
                             ll = []
                             path = []
                             back_track(root)
-                            write_label_to_file(i, num1, ll)
+                            write_label_to_file(dataset, i, num1, ll, num_authors)
 
                         except:
                             print("-----------------------------------------")
@@ -139,15 +143,24 @@ def parse1(author_label):
 
 if __name__ == '__main__':
     # parse1(0)
-
+    dataset = 'imdb'
+    num_authors = 62
     procs = []
     print("begin")
     queue = Queue()
-    author_list = [40]
 
-    for i in author_list:
-        # for i in range(52,63):
-        p = Process(target=parse1, args=(i,))
+    # parse1(dataset, [1])
+
+    progress_num = 5
+    per_progress = int(num_authors/progress_num)
+    for i in range(progress_num):
+        if i+1 == progress_num:
+            author_list = list(range(i*per_progress+1, num_authors+1))
+        else:
+            author_list = list(range(i*per_progress+1, (i+1)*per_progress+1))
+
+        print(author_list)
+        p = Process(target=parse1, args=(dataset, author_list))
         p.start()
         procs.append(p)
 

@@ -22,7 +22,6 @@ import utils
 from keras.engine.topology import Layer
 
 import argparse
-import authorship
 import time
 from keras.utils import np_utils
 from data_prerpcess import *
@@ -35,10 +34,12 @@ np.set_printoptions(threshold=np.inf)
 session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
 tf.set_random_seed(1234)
 
+
+datasets = ['emails', 'imdb', 'blogs', 'twitter', 'reddit', 'CCAT']
 classif_id = 'CNN+gram'
 parser = argparse.ArgumentParser(description=classif_id)
 parser.add_argument('--num_authors', required=True, type=int, default=10, help='the number of authors')
-parser.add_argument('--datasets', required=True, choices=authorship.datasets, help='the datasets')
+parser.add_argument('--datasets', required=True, choices=datasets, help='the datasets')
 parser.add_argument('--type', nargs='?', choices=['char_3', 'word'])
 # parser.add_argument('--results', required=True, nargs='?',  help='the datasets')
 
