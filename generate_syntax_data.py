@@ -82,10 +82,10 @@ def parse1(dataset, author_list, num_authors=None):
 
     file = dataset
     if num_authors is not None:
-        file += ('/'+str(num_authors))
+        file += ('/' + str(num_authors))
     # get the author's documents per author
     for i in author_list:
-        with open(file+"/word_data/all/author" + str(i), "r") as f:
+        with open(file + "/word_data/all/author" + str(i), "r") as f:
             documents = f.readlines()
             num1 = 0
 
@@ -144,20 +144,23 @@ def parse1(dataset, author_list, num_authors=None):
 if __name__ == '__main__':
     # parse1(0)
     dataset = 'imdb'
-    num_authors = 62
+    # num_authors = 62
     procs = []
     print("begin")
     queue = Queue()
 
     # parse1(dataset, [1])
+    authorList = [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 50, 51, 52,
+                  53, 54, 55, 56, 57, 58, 59, 60, 61, 62]
 
+    num_authors = len(authorList)
     progress_num = 5
-    per_progress = int(num_authors/progress_num)
+    per_progress = int(num_authors / progress_num)
     for i in range(progress_num):
-        if i+1 == progress_num:
-            author_list = list(range(i*per_progress+1, num_authors+1))
+        if i + 1 == progress_num:
+            author_list = list(authorList[i * per_progress: num_authors])
         else:
-            author_list = list(range(i*per_progress+1, (i+1)*per_progress+1))
+            author_list = list(authorList[i * per_progress: (i + 1) * per_progress])
 
         print(author_list)
         p = Process(target=parse1, args=(dataset, author_list))

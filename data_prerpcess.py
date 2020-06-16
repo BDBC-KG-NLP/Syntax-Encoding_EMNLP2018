@@ -97,8 +97,14 @@ def get_blogs_train_and_test(authors_count, min_doc=None):
     return X_train, Y_train, X_test, Y_test, dic, sorted(document_length)[-1], label_dic
 
 
-def get_CCAT_train_and_test(authors_count):
-    file = 'CCAT/' + str(authors_count) + '/parse_data/author{}/{}.txt'
+def get_CCAT_train_and_test(dataset, authors_count):
+    perDocNum = 100
+    if dataset == 'CCAT':
+        perDocNum = 100
+        file = 'CCAT/' + str(authors_count) + '/parse_data/author{}/{}.txt'
+    elif dataset == 'imdb':
+        perDocNum = 1000
+        file = 'imdb/parse_data/author{}/{}.txt'
     X_train = []
     X_test = []
     Y_train = []
@@ -107,8 +113,8 @@ def get_CCAT_train_and_test(authors_count):
     num = 0
     for i in range(1, authors_count + 1):
         print(i)
-        num += 100
-        for j in range(1, 51):
+        num += perDocNum
+        for j in range(1, int(perDocNum/2)+1):
             try:
                 document = []
                 with codecs.open(file.format(str(i), str(j)), "r", "latin1") as f:
@@ -134,7 +140,7 @@ def get_CCAT_train_and_test(authors_count):
                 Y_train.append(i - 1)
                 print("train:author" + str(i) + " " + str(j) + "document")
 
-        for j in range(51, 101):
+        for j in range(int(perDocNum/2)+1, perDocNum+1):
             try:
                 document = []
                 with codecs.open(file.format(str(i), str(j)), "r", "latin1") as f:

@@ -50,6 +50,8 @@ authors_count = args.num_authors
 results_opdir = "best"
 dataset = args.datasets
 
+print(dataset)
+
 authors_count = int(authors_count)
 train_ratio = 0.5
 if authors_count == 10 or authors_count == 50 or authors_count == 8:
@@ -368,7 +370,10 @@ def get_author_names_all_authors(author_lists_fpath):
 
 
 def get_data_for_nns():
-    data_rootdir = "CCAT/"+str(authors_count)+"/word_data/all"
+    if dataset == 'CCAT':
+        data_rootdir = "CCAT/"+str(authors_count)+"/word_data/all"
+    elif dataset == 'imdb':
+        data_rootdir = "imdb/word_data/all"
     authors = get_author_names_all_authors(os.path.join(data_rootdir, "all_authors.txt"))
     test_fold = 0
     authors = authors[:authors_count]
@@ -416,7 +421,7 @@ def train_model_with_params():
     utils.create_opdir(models_results_opdir)
 
     # 加载CCAT数据集
-    if dataset == 'CCAT':
+    if dataset == 'CCAT' or dataset == 'imdb':
         X_train, Y_train_word, X_test, Y_test_word = get_data_for_nns()
 
     # 加载blogs数据集
@@ -441,8 +446,8 @@ def train_model_with_params():
         X_test), single_feats.feature_map
     print('syntax')
 
-    if dataset == 'CCAT':
-        X_train, Y_train1, X_test, Y_test1, dic, length, label_dic = get_CCAT_train_and_test(authors_count)
+    if dataset == 'CCAT' or dataset == 'imdb':
+        X_train, Y_train1, X_test, Y_test1, dic, length, label_dic = get_CCAT_train_and_test(dataset, authors_count)
     elif dataset == 'blogs':
         X_train, Y_train1, X_test, Y_test1, dic, length, label_dic = get_blogs_train_and_test(authors_count, min_doc=10)
 
@@ -466,5 +471,3 @@ def sava_data(X, Y, flag):
 
 if __name__ == "__main__":
     train_model_with_params()
-    # X_label = np.zeros((10000, 6324, 150), dtype=np.float32)
-    # get_all_data_count(10, dataset)
