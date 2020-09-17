@@ -57,7 +57,7 @@ class SyntaxTextCNN(nn.Module):
         syntax_output = self.dropout(self.syntax_cnn(syntax_output))
 
         output = torch.cat([text_output, syntax_output], 1)
-        output = F.softmax(self.fc1(output), dim=1)
+        output = self.fc1(output)
         return output
 
 

@@ -11,12 +11,13 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(seed)  # 为所有GPU设置随机种子
 else:
     torch.manual_seed(seed)
+torch.random.manual_seed(1234)
 
 parser = argparse.ArgumentParser(
     "Implementation of the model: Syntax Encoding with Application in Authorship Attribution")
 parser.add_argument("--batch_size", type=int, default=16)
 parser.add_argument("--epochs", type=int, default=10)
-parser.add_argument("--lr", type=float, default=1 * 1e-4)
+parser.add_argument("--lr", type=float, default=4 * 1e-4)
 parser.add_argument("--text_out_dim", type=int, default="500")
 parser.add_argument("--syntax_out_dim", type=int, default="50")
 parser.add_argument("--text_embed_size", type=int, default="300")
