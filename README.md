@@ -4,23 +4,21 @@ dataset and code for the paper: **Syntax Encoding with Application in Authorship
 
 you can get the datasets used in the paper at [here](https://drive.google.com/drive/folders/1hlIWVSt0dfy8fz8d4wRzZItl-LCo5BH1?usp=sharing).
 
-## overview
+## Overview
 
 We propose a novel strategy to encode the syntax parse tree of sentence into a learnable distributed representation. The proposed syntax encoding scheme is provably information lossless. In specific, an embedding vector is constructed for each word in the sentence, encoding the path in the syntax tree corresponding to the word. The one-to-one correspondence between these “syntax-embedding” vectors
 and the words (hence their embedding vectors) in the sentence makes it easy to integrate such a representation with all word-level NLP models. We empirically show the benefits of the syntax embeddings on the Authorship Attribution domain, where our approach improves upon the prior art and achieves new
 performance records on five benchmarking data sets.
 
-## requirement
+## Requirement
 
-- python
-- pytorch
-- tensorflow
-- numpy
-- nltk
-- standford parser
+- python  3.7
+- pytorch  1.2.0
+- tensorflow  1.14.0
+- numpy  1.16.2
+- nltk 3.4
 
-
-## execute
+## Usage
 
 ```
 python main.py --dataset <dataset_name> --num_authors <num_of_authors>
